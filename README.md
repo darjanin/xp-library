@@ -1,4 +1,4 @@
-# xp-library
+# XP-Library - Online správa knižnice
 
 ## Installation
 
