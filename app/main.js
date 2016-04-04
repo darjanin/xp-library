@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Firebase from 'firebase'
 import Index from './src/Index.js'
 import Navigation from './src/navigation.js'
 
@@ -8,16 +7,16 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      content : <Index/>
+      page: 'index'
     }
   }
 
   render() {
     return (
-        <main className="container">
+        <div className="container">
           <Navigation/>
-          {this.state.content}
-        </main>
+          { this.state.page === 'index' ? <Index/> : null }
+        </div>
     )
   }
 }
