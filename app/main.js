@@ -17,7 +17,7 @@ class App extends React.Component {
     let newBooks = [...this.state.books, book]
 
     this.setState({
-      books: newBooks
+      books: newBooks,
     })
   }
 

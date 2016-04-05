@@ -12,6 +12,10 @@ export default class AddBookPage extends React.Component {
     }
 
     this.props.addFn(book)
+
+    for (let ref in this.refs) {
+      this.refs[ref].value = ''
+    }
   }
 
   render() {

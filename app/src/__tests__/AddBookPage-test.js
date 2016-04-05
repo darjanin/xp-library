@@ -37,6 +37,28 @@ describe('AddBookPage', () => {
 
     expect(returnedBook).toEqual(bookDummy)
   })
+
+  it('cleans fields after save', () => {
+    const addBookPage = TestUtils.renderIntoDocument(
+      <AddBookPage addFn={(book) => {}} />
+    )
+
+    const form = TestUtils.findRenderedDOMComponentWithTag(addBookPage, 'form')
+
+    addBookPage.refs.title.value = bookDummy.title
+    addBookPage.refs.author.value = bookDummy.author
+    addBookPage.refs.year.value = bookDummy.year
+    addBookPage.refs.description.value = bookDummy.description
+
+    TestUtils.Simulate.submit(
+      form
+    )
+
+    expect(addBookPage.refs.title.value).toEqual('')
+    expect(addBookPage.refs.author.value).toEqual('')
+    expect(addBookPage.refs.year.value).toEqual('')
+    expect(addBookPage.refs.description.value).toEqual('')
+  })
   // const index = TestUtils.renderIntoDocument(
   //   <Index name="Fero"/>
   // )
