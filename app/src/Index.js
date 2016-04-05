@@ -17,6 +17,7 @@ export default class Index extends React.Component {
         <main className="content">
           <h1>Welcome to Virtual Library</h1>
           <p>{this.sayHello(this.props.name)}</p>
+          <input type="text" id="hello"/>
           <p ref="count">{this.state.count}</p>
           <button onClick={() => this.setState({count: this.state.count + 2})}>Rise</button>
         </main>
