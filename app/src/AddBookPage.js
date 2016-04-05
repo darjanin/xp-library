@@ -15,12 +15,27 @@ export default class AddBookPage extends React.Component {
   }
 
   render() {
-    return (<div>
-      <form onSubmit={this.onSubmit.bind(this)}>
-        <input type="text" ref="title" placeholder="title"/>
-        <input type="text" ref="author" placeholder="author"/>
-        <input type="text" ref="year" placeholder="year"/>
-        <textarea type="text" ref="description" placeholder="description"></textarea>
+    return (<div className="columns">
+      <form className="column is-6 is-offset-3" onSubmit={this.onSubmit.bind(this)}>
+        <div className="hero-content">
+          <h1 className="title">
+            Add new book
+          </h1>
+        </div>
+
+        <div className="control">
+        <input className="input" type="text" ref="title" placeholder="title"/>
+        </div>
+        <div className="control">
+        <input className="input" type="text" ref="author" placeholder="author"/>
+        </div>
+        <div className="control">
+        <input className="input" type="text" ref="year" placeholder="year"/>
+        </div>
+        <div className="control">
+        <textarea className="textarea" type="text" ref="description" placeholder="description"></textarea>
+        </div>
+        <button className="button is-primary" type="submit">Add</button>
       </form>
     </div>)
   }
