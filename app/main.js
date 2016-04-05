@@ -15,7 +15,7 @@ class App extends React.Component {
     return (
         <div className="container">
           <Navigation/>
-          { this.state.page === 'index' ? <Index/> : null }
+          { this.state.page === 'index' ? <Index name="Fero"/> : null }
         </div>
     )
   }
