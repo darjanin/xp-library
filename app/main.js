@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Index from './src/Index.js'
-import Navigation from './src/navigation.js'
+import Index from './src/pages/Index'
+import Navigation from './src/Navigation'
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class App extends React.Component {
     return (
         <div className="container">
           <Navigation/>
-          { this.state.page === 'index' ? <Index/> : null }
+          { this.state.page === 'index' ? <Index name="Fero"/> : null }
         </div>
     )
   }
