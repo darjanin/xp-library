@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Index from './src/Index'
 import AddBookPage from './src/AddBookPage'
+import BookList from './src/BookList'
 import Navigation from './src/Navigation'
 
 class App extends React.Component {
@@ -18,6 +19,7 @@ class App extends React.Component {
 
     this.setState({
       books: newBooks,
+      page: "list"
     })
   }
 
@@ -33,6 +35,8 @@ class App extends React.Component {
       page = <Index/>
     } else if (this.state.page === 'add') {
       page = <AddBookPage addFn={this.addBook.bind(this)} />
+    } else if (this.state.page === 'list') {
+      page = <BookList books={this.state.books}/>
     } else {
       page = <h1>404 Page not found</h1>
     }
