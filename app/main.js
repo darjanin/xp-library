@@ -9,8 +9,23 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      page: 'add',
-      books: []
+      page: 'list',
+      books: [{
+    title: "Harry Potter a Extremne programovanie",
+    author: "F.S.K.I.G.",
+    year: "2013",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo enim sequi veniam nulla deleniti unde doloremque, exercitationem sit quidem. Facilis dolores atque libero temporibus sit incidunt totam odio officia error deleniti fugit repellendus sint aliquam eos quae architecto illum doloribus reiciendis, enim, at distinctio voluptates vero commodi! Quaerat cum et rerum, harum esse asperiores."
+  }, {
+    title: "Harry Potter a Extremne programovanie",
+    author: "F.S.K.I.G.",
+    year: "2013",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo enim sequi veniam nulla deleniti unde doloremque, exercitationem sit quidem. Facilis dolores atque libero temporibus sit incidunt totam odio officia error deleniti fugit repellendus sint aliquam eos quae architecto illum doloribus reiciendis, enim, at distinctio voluptates vero commodi! Quaerat cum et rerum, harum esse asperiores."
+  }, {
+    title: "Harry Potter a Extremne programovanie",
+    author: "F.S.K.I.G.",
+    year: "2013",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo enim sequi veniam nulla deleniti unde doloremque, exercitationem sit quidem. Facilis dolores atque libero temporibus sit incidunt totam odio officia error deleniti fugit repellendus sint aliquam eos quae architecto illum doloribus reiciendis, enim, at distinctio voluptates vero commodi! Quaerat cum et rerum, harum esse asperiores."
+  }]
     }
   }
 
@@ -41,8 +56,8 @@ class App extends React.Component {
       page = <h1>404 Page not found</h1>
     }
     return (
-        <div className="container">
-          <Navigation changePageFn={this.changePage}/>
+        <div className="">
+          <Navigation changePageFn={this.changePage.bind(this)} active={this.state.page}/>
           { page }
         </div>
     )
