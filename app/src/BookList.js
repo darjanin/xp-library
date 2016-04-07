@@ -5,7 +5,7 @@ export default class BookList extends React.Component {
     const {title, author, year, description} = book
 
     return (
-      <div className="column is-half">
+      <div key={Math.random()} className="column is-half">
         <div className="card" style={{width: '100%'}} key={Math.random()}>
           <div className="card-header">
             <div className="card-header-title">{title}</div>
