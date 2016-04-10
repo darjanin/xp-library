@@ -1,5 +1,5 @@
 import React from 'react'
-import databaseUtils from './../../js/DatabaseUtils'
+import databaseUtils from './utils/DatabaseUtils'
 
 export default class Login extends React.Component {
   onSubmit(e) {
@@ -10,7 +10,7 @@ export default class Login extends React.Component {
       password: this.refs.password.value
     }
 
-    databaseUtils.loginWithPW(user)
+    databaseUtils.loginWithPassword(user)
   }
 
   render() {

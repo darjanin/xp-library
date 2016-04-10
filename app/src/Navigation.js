@@ -1,5 +1,5 @@
 import React from 'react'
-import databaseUtils from './../js/DatabaseUtils'
+import databaseUtils from './pages/utils/DatabaseUtils'
 
 export default class Navigation extends React.Component {
   loginPage(e) {

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Index from './src/pages/Index'
 import Login from './src/pages/Login'
 import Navigation from './src/Navigation'
-import databaseUtils from './js/DatabaseUtils'
+import databaseUtils from './src/pages/utils/DatabaseUtils'
 
 class App extends React.Component {
   constructor(props) {
