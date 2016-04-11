@@ -20,18 +20,10 @@ describe('BookList', () => {
   )
   const bookListNode = ReactDOM.findDOMNode(bookList)
 
-  const bookListChildren = bookListNode.children
+  // Prefix for test classes is 't-'
+  const bookListChildren = bookListNode.getElementsByClassName('t-books')[0].children
 
   it('lists all books', () => {
     expect(bookListChildren.length).toEqual(booksDummy.length)
-
-    // const form = TestUtils.findRenderedDOMComponentWithTag(bookList, 'form')
   })
-
-  // it('right details of books', () => {
-  //   for (let i = 0; i < booksDummy.length; i++) {
-  //     let title = bookListChildren[i].children[0]
-  //   }
-  //   expect(returnedBook).toEqual(bookDummy)
-  // })
 })

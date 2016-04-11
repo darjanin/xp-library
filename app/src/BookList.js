@@ -29,7 +29,7 @@ export default class BookList extends React.Component {
   render() {
     return (
       <div className="container" style={{marginTop: '20px'}}>
-        <div className="columns is-multiline">
+        <div className="columns is-multiline t-books">
           { this.props.books.map((book) => this.renderBook(book)) }
         </div>
       </div>
