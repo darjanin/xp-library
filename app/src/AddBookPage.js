@@ -1,6 +1,14 @@
 import React from 'react'
+import {validateRequired, validateYearFormat} from './ValidationUtils'
 
 export default class AddBookPage extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      errors: []
+    }
+  }
+
   onSubmit(e) {
     e.preventDefault()
 
@@ -11,10 +19,19 @@ export default class AddBookPage extends React.Component {
       description: this.refs.description.value
     }
 
-    this.props.addFn(book)
+    let errorsMessages = []
+    errorsMessages.concat(validateRequired(book))
+    errorsMessages.concat(validateYearFormat(book.year))
 
-    for (let ref in this.refs) {
-      this.refs[ref].value = ''
+    if(errorsMessages.length === 0)
+    {
+      this.props.addFn(book)
+
+      for (let ref in this.refs) {
+        this.refs[ref].value = ''
+      }
+    } else {
+      this.setState({errors: errorsMessages})
     }
   }
 
@@ -26,7 +43,9 @@ export default class AddBookPage extends React.Component {
             Add new book
           </h1>
         </div>
-
+        {this.state.errors.map((error) => 
+          <div className="t-error-message">{error}</div>
+        )}
         <div className="control">
         <input className="input" type="text" ref="title" placeholder="title"/>
         </div>

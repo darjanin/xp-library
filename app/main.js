@@ -34,7 +34,7 @@ class App extends React.Component {
 
     this.setState({
       books: newBooks,
-      page: "list"
+      page: "add"
     })
   }
 
