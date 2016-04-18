@@ -13,6 +13,7 @@ class App extends React.Component {
       page: 'index',
       loggedIn: loggedIn
     }
+
   }
 
   handleLogout(loggedIn) {

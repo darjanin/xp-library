@@ -40,7 +40,6 @@ let databaseUtils = {
         auth.email = user.email
         cachedUser = auth
         this.onChange(true)
-
         if (callbackOnRegistered) {
           callback(auth)
           callbackOnRegistered(false)
@@ -50,6 +49,7 @@ let databaseUtils = {
       }
     }.bind(this))
   },
+
 
   isLoggedIn: function () {
     return cachedUser && true || ref.getAuth() || false

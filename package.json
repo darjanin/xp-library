@@ -45,6 +45,9 @@
   "devDependencies": {
     "babel-jest": "^10.0.1",
     "jest-cli": "^0.10.0",
-    "react-addons-test-utils": "^0.14.8"
+    "react-addons-test-utils": "^0.14.8",
+    "babel-plugin-syntax-async-functions": "^6.1.4",
+    "babel-plugin-transform-regenerator": "^6.1.4",
+    "babel-polyfill": "^6.1.4"
   }
 }
