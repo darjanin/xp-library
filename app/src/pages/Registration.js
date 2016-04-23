@@ -41,7 +41,7 @@ export default class Registration extends React.Component {
       errorMessages.push(messagePassword)
     }
 
-    if(errorMessages) {
+    if(errorMessages.length > 0) {
       this.setState({errors: errorMessages})
       return
     }

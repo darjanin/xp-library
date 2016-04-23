@@ -1,12 +1,20 @@
 import FireBase from 'firebase'
 
-const forge = "https://sweltering-heat-4077.firebaseio.com/"
+//const forge = "https://sweltering-heat-4077.firebaseio.com/" //Ondro
+const forge = "https://torrid-heat-4247.firebaseio.com" // Adam
 let ref = new FireBase(forge)
 let cachedUser = null
 
 let addNewUserToFireBase = function (newUser) {
   let key = newUser.uid
-  ref.child('users').child(key).set(newUser)
+  let user = {
+    email: newUser.email,
+    uid: newUser.uid,
+    token: newUser.token,
+    username: newUser.username
+  }
+
+  ref.child('users').child(key).set(user)
 }
 
 let databaseUtils = {
@@ -15,12 +23,16 @@ let databaseUtils = {
       if (error) {
         let message = error.code
         callback(message)
+        console.log('error')
       } else {
+        console.log('login')
         this.loginWithPassword(user, function (auth) {
+          console.log('loged')
           addNewUserToFireBase({
             email: user.email,
             uid: auth.uid,
-            token: auth.token
+            token: auth.token,
+            username: user.username
           })
         }, callback)
       }
