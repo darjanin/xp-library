@@ -7,38 +7,37 @@ import Login from './src/pages/Login'
 import Registration from './src/pages/Registration'
 import Navigation from './src/Navigation'
 import databaseUtils from './src/pages/utils/DatabaseUtils'
+import Firebase from 'firebase'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     let loggedIn = databaseUtils.isLoggedIn()
+    this.forge = "https://flickering-fire-362.firebaseio.com"
     this.state = {
       page: 'list',
-      books: [{
-        title: "Harry Potter a Extremne programovanie",
-        author: "F.S.K.I.G.",
-        year: "2013",
-        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo enim sequi veniam nulla deleniti unde doloremque, exercitationem sit quidem. Facilis dolores atque libero temporibus sit incidunt totam odio officia error deleniti fugit repellendus sint aliquam eos quae architecto illum doloribus reiciendis, enim, at distinctio voluptates vero commodi! Quaerat cum et rerum, harum esse asperiores."
-      }, {
-        title: "Harry Potter a Extremne programovanie",
-        author: "F.S.K.I.G.",
-        year: "2013",
-        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo enim sequi veniam nulla deleniti unde doloremque, exercitationem sit quidem. Facilis dolores atque libero temporibus sit incidunt totam odio officia error deleniti fugit repellendus sint aliquam eos quae architecto illum doloribus reiciendis, enim, at distinctio voluptates vero commodi! Quaerat cum et rerum, harum esse asperiores."
-      }, {
-        title: "Harry Potter a Extremne programovanie",
-        author: "F.S.K.I.G.",
-        year: "2013",
-        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo enim sequi veniam nulla deleniti unde doloremque, exercitationem sit quidem. Facilis dolores atque libero temporibus sit incidunt totam odio officia error deleniti fugit repellendus sint aliquam eos quae architecto illum doloribus reiciendis, enim, at distinctio voluptates vero commodi! Quaerat cum et rerum, harum esse asperiores."
-      }],
+      books: {},
     loggedIn: false,
     }
   }
 
+  componentDidMount() {
+    let booksRef = new Firebase(this.forge + '/books')
+    let newBooks
+    booksRef.on("value", (snapshot) => {
+      newBooks = snapshot.val()
+      console.log(newBooks);
+      this.setState({books: newBooks})
+    }, function (errorObject) {
+      console.error("The read failed: " + errorObject.code)
+    })
+  }
+
   addBook(book) {
-    let newBooks = [...this.state.books, book]
+    let booksRef = new Firebase(this.forge + '/books')
+    booksRef.push().set(book)
 
     this.setState({
-      books: newBooks,
       page: 'list'
     })
   }
@@ -88,3 +87,8 @@ ReactDOM.render(
   <App/>,
   document.getElementById('app')
 );
+
+// Softwarové projekty mohou být zábavné, produktivní a dokonce i smělé. Přesto mohou zůstávat řízené a přinášet zisk. Mnoha lidem se extrémní programování (XP) jeví jako střízlivé a praktické. Proč je pak nazýváno extrémní? XP používá běžně používané principy a postupy, avšak dotahuje je do extrémů.
+// XP bylo koncipováno a vyvinuto tak, aby vyhovovalo specifickým potřebám malých a středně velkých softwarových týmů, které musí reagovat na mlhavá a často se měnící zadání. XP je považováno za kontroverzní, protože neuznává některé „posvátné krávy“. Tato nová, odlehčená metodika totiž odmítá řadu klasických zásad včetně stále přetrvávajícího názoru, že náklady na zapracování změny v projektu prudce rostou s časem jejího zadání. XP např. uznává, že je třeba se neustále snažit o snižování nákladů, ale liší se v názoru na to, co s uspořenými náklady – XP tým je nepředá nadřízeným, ale ihned je využije pro další vývoj.
+// Extrémní programování je známé některými svými na první pohled podivnými pravidly. Mezi nejznámější patří zásada programování v párech, kdy u jednoho počítače spolu vždy pracují dva programátoři. Přesto zkušenost ukazuje, že zavedením XP se produktivita týmu přibližně zdvojnásobí.
+// Extrémní programování můžete milovat nebo nenávidět. Tato knížka vás však donutí k tomu, abyste se znovu podívali na to, jakým způsobem vyvíjíte software.
