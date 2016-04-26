@@ -2,6 +2,12 @@ import React from 'react'
 import databaseUtils from './pages/utils/DatabaseUtils'
 
 export default class Navigation extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      active: this.props.active
+    }
+  }
 
   handleLogout() {
     databaseUtils.logout()
@@ -11,6 +17,7 @@ export default class Navigation extends React.Component {
     return function (e) {
       e.preventDefault();
       this.props.changePageFn(page)
+      this.setState({active: page})
     }
   }
 
@@ -25,24 +32,40 @@ export default class Navigation extends React.Component {
     }
 
     return (
-      <header className="header">
-        <div className="container">
-          <div className="header-left">
-            <a className="header-tab" onClick={this.changePage('index').bind(this)} href="#">Index</a>
-          </div>
+        <header className="header">
+          <div className="container">
+            <div className="header-left">
+              <a className="header-item" onClick={this.changePage('list').bind(this)} href="#">
+                <img src="/logo.svg" alt="Logo" />
+              </a>
+              <a
+                className={`header-tab ${this.state.active === 'list' ? 'is-active' : ''}`}
+                onClick={this.changePage('list').bind(this)}
+              >
+                List of books
+              </a>
+              <a
+                className={`header-tab ${this.state.active === 'add' ? 'is-active' : ''}`}
+                onClick={this.changePage('add').bind(this)}
+              >
+                Add book
+              </a>
+            </div>
 
-          <span className="header-toggle">
-            <span></span>
-          </span>
-
-          <div className="header-right header-menu">
-            <span className="header-item">
-              {loginOrLogOut}
+            <span className="header-toggle">
+              <span></span>
+              <span></span>
+              <span></span>
             </span>
-            {registration}
+
+            <div className="header-right header-menu">
+              <span className="header-item">
+                {loginOrLogOut}
+              </span>
+              {registration}
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
     )
   }
 }
