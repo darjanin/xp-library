@@ -1,7 +1,15 @@
 import React from 'react'
 import databaseUtils from './utils/DatabaseUtils'
+import {userRequired} from '../ValidationUtils'
 
 export default class Login extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      errors: []
+    }
+  }
+
   onSubmit(e) {
     e.preventDefault()
 
@@ -10,10 +18,35 @@ export default class Login extends React.Component {
       password: this.refs.password.value
     }
 
-    databaseUtils.loginWithPassword(user)
+    let errorsMessages = userRequired(user)
+
+    let self = this
+
+    function onError(dbMessage) {
+      if (dbMessage) {
+        self.setState({errors: ["Email or password are incorrect"]})
+      }
+    }
+
+    if (errorsMessages.length === 0) {
+      databaseUtils.loginWithPassword(user, onError)
+    } else {
+      this.setState({errors: errorsMessages})
+    }
   }
 
   render() {
+    let errors
+    let errorMessages = this.state.errors.map(function (error, i) {
+      return length - 1 == i ? error : [error, <br/>]
+    })
+
+    if (errorMessages.length > 0) {
+      errors = <div className="message is-danger">
+        <div className="message-body"> {errorMessages} </div>
+      </div>
+    }
+
     return (
       <div className="columns">
         <form className="column is-6 is-offset-3" onSubmit={this.onSubmit.bind(this)}>
@@ -22,13 +55,13 @@ export default class Login extends React.Component {
               Log In
             </h1>
           </div>
-
           <div className="control">
             <input className="input" type="text" ref="email" placeholder="E-mail"/>
           </div>
           <div className="control">
             <input className="input" type="password" ref="password" placeholder="Password"/>
           </div>
+          {errors}
           <button className="button is-primary" type="submit">Log In</button>
         </form>
       </div>

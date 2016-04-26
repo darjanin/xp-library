@@ -1,5 +1,6 @@
+const ERROR_MESSAGE_REQUIRED = ' is required, please fill it.'
+
 export function validateRequired(book){
-  const ERROR_MESSAGE_REQUIRED = ' is required, please fill it.'
   let errorMessages = []
   
   if(book.title === ''){
@@ -21,4 +22,18 @@ export function validateYearFormat(year){
   }
   return []
 }
+
+export function userRequired(user){
+  let errorMessages = []
+
+  if(user.email === ''){
+    errorMessages.push('Email' + ERROR_MESSAGE_REQUIRED)
+  }
+  if(user.password === ''){
+    errorMessages.push('Password' + ERROR_MESSAGE_REQUIRED)
+  }
+  return errorMessages
+}
+
+
 
