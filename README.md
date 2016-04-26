@@ -8,3 +8,10 @@
 - Open in browser http://localhost:3000
 
 To learn what firebase is doing read documentation https://www.firebase.com/docs/web/guide/saving-data.html
+
+## Firebase
+
+- Register your own database
+- Go to Login & Auth
+- Enable email & pw auth
+- Add demo user
