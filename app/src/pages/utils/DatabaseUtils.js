@@ -1,8 +1,9 @@
 import FireBase from 'firebase'
+import {firebaseUrl} from '../../config'
 
 //const forge = "https://sweltering-heat-4077.firebaseio.com/" //Ondro
-const forge = "https://torrid-heat-4247.firebaseio.com" // Adam
-let ref = new FireBase(forge)
+// const forge = "https://torrid-heat-4247.firebaseio.com" // Adam
+let ref = new FireBase(firebaseUrl)
 let cachedUser = null
 
 let addNewUserToFireBase = function (newUser) {

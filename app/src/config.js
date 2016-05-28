@@ -1,3 +1,1 @@
-export config = {
-  FIREBASE: 'https://burning-fire-9609.firebaseio.com/', 
-}
+export const firebaseUrl = 'https://flickering-fire-362.firebaseio.com'

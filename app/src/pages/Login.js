@@ -36,17 +36,6 @@ export default class Login extends React.Component {
   }
 
   render() {
-    let errors
-    let errorMessages = this.state.errors.map(function (error, i) {
-      return length - 1 == i ? error : [error, <br/>]
-    })
-
-    if (errorMessages.length > 0) {
-      errors = <div className="message is-danger">
-        <div className="message-body"> {errorMessages} </div>
-      </div>
-    }
-
     return (
       <div className="columns">
         <form className="column is-6 is-offset-3" onSubmit={this.onSubmit.bind(this)}>
@@ -61,7 +50,15 @@ export default class Login extends React.Component {
           <div className="control">
             <input className="input" type="password" ref="password" placeholder="Password"/>
           </div>
-          {errors}
+          {this.state.errors.length > 0 &&
+            <div className="message is-danger">
+              <div className="message-body">
+                <ul>
+                  {this.state.errors.map((error) => <li key={Math.random()}>{error}</li>)}
+                </ul>
+              </div>
+            </div>
+          }
           <button className="button is-primary" type="submit">Log In</button>
         </form>
       </div>

@@ -16,7 +16,13 @@ export default class AddBookPage extends React.Component {
       title: this.refs.title.value,
       author: this.refs.author.value,
       year: this.refs.year.value,
-      description: this.refs.description.value
+      description: this.refs.description.value,
+      lend: {
+        lend: false,
+        id: '',
+        name: '',
+        date: '',
+      }
     }
 
     let errorsMessages = []
@@ -43,7 +49,7 @@ export default class AddBookPage extends React.Component {
             Add new book
           </h1>
         </div>
-        {this.state.errors.map((error) => 
+        {this.state.errors.map((error) =>
           <div className="t-error-message">{error}</div>
         )}
         <div className="control">
