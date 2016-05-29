@@ -2,25 +2,8 @@ import React from 'react'
 import databaseUtils from './pages/utils/DatabaseUtils'
 
 export default class Navigation extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  handleLogout() {
-
-  }
-
   render() {
     const {changePageFn, active, loggedIn} = this.props
-
-    // let loginOrLogOut
-    // let registration
-    // if (this.props.loggedIn) {
-    //   loginOrLogOut =
-    // } else {
-    //   loginOrLogOut = <button className="button is-primary" onClick={changePage('login')} href="#">Log In</button>
-    //   registration =
-    // }
 
     const HeaderTab = ({children, page}) => (
       <a

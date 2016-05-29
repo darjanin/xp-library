@@ -16,7 +16,7 @@ export default ({books, showBookFn, deleteBookFn, loggedUser}) => (
 
 const Book = ({key, data: {title, author, year, description, userId, lend: {lend}}, showFn, deleteFn, loggedUserId}) => (
   <div key={key} className="column is-half">
-    <div className="card" style={{width: '100%'}} key={Math.random()}>
+    <div className="card is-fullwidth" key={Math.random()}>
       <div className="card-header">
         <div
           className="card-header-title"

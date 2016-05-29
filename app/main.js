@@ -17,17 +17,17 @@ class App extends React.Component {
     this.state = {
       page: 'list',
       activeBook: null,
+      activeBookComments: {},
       books: {},
       loggedIn: databaseUtils.isLoggedIn(),
     }
   }
 
   componentDidMount() {
-    let booksRef = new Firebase(firebaseUrl + '/books')
-    let newBooks
+    const ref = new Firebase(firebaseUrl)
+    let booksRef = ref.child('books')
     booksRef.on("value", (snapshot) => {
-      newBooks = snapshot.val()
-      console.log(newBooks);
+      const newBooks = snapshot.val()
       this.setState({books: newBooks})
     }, function (errorObject) {
       console.error("The read failed: " + errorObject.code)
@@ -50,6 +50,7 @@ class App extends React.Component {
     return null
   }
 
+
   addBook(book) {
     const ref = new Firebase(firebaseUrl)
     const authData = ref.getAuth()
@@ -59,6 +60,25 @@ class App extends React.Component {
     }))
 
     this.changePage('list')
+  }
+
+  addComment(bookId, text) {
+    const ref = new Firebase(firebaseUrl + `/comments`)
+    ref.push({
+      bookId: bookId,
+      authorId: this.getLoggedUserId(),
+      text: text,
+      date: Date.now()
+    })
+  }
+
+  getComment() {
+    // const commentsRef = ref.child('comments')
+    // commentsRef.orderByChild('bookId').equalTo(this.state.activeBook).once('value', (data) => {
+    //   this.setState({
+    //     activeBookComments: data.val()
+    //   })
+    // })
   }
 
   handleLogout(loggedIn) {
@@ -155,6 +175,7 @@ class App extends React.Component {
         returnFn={this.returnBook.bind(this)}
         loggedIn={this.state.loggedIn}
         hasLended={this.bookLendedToLoggedUser(this.state.books[this.state.activeBook])}
+        addCommentFn={this.addComment.bind(this)}
       />
     } else {
       page = <h1>404 Page not found</h1>
