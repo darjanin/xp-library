@@ -17,6 +17,11 @@ export default class Navigation extends React.Component {
       </a>
     )
 
+    var userInfo = null;
+    if (loggedIn) {
+      userInfo = databaseUtils.getUserInfo()
+    }
+
     return (
         <header className="header">
           <div className="container">
@@ -34,6 +39,19 @@ export default class Navigation extends React.Component {
             </div>
 
             <div className="header-right">
+              {loggedIn && userInfo && userInfo.username &&
+                <div className="header-item">
+                  <button
+                    className="button is-success"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      //changePageFn('userInfo')
+                    }}
+                  >
+                    {userInfo ? userInfo.username : 'Error'}
+                  </button>
+                </div>
+              }
               <div className="header-item">
                 <button
                   className="button is-success"

@@ -66,7 +66,20 @@ let databaseUtils = {
   logout: function () {
     ref.unauth()
     cachedUser = null
-    this.onChange(false);
+    this.onChange(false)
+  },
+
+  getUserInfo: function () {
+    let userInfo = null
+    var localRef = new Firebase(firebaseUrl + "/users");
+    let auth = ref.getAuth()
+    localRef.orderByChild('uid').equalTo(auth.uid).on('value', function(snapshot) {
+      snapshot.forEach(function(data) {
+        userInfo = data.val()
+      });
+    });
+    
+    return userInfo;
   }
 }
 
