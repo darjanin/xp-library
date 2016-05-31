@@ -78,6 +78,7 @@ class CommentForm extends React.Component {
     const text = this.refs.text.value
     if (text !== '') {
       this.props.addComment(text)
+      this.refs.text.value = ''
     } else {
       alert('Comment cannot be empty.')
     }
