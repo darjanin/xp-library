@@ -25,11 +25,6 @@ export default class Registration extends React.Component {
     let messageEmail = validatorUtils.validateEmail(user.email)
     let messagePassword = validatorUtils.validatePassword(user.password, user.passwordCheck)
 
-    console.log(user);
-    console.log(messageUsername);
-    console.log(messageEmail);
-    console.log(messagePassword);
-
     let errorMessages = [];
     if(messageUsername) {
       errorMessages.push(messageUsername)
@@ -46,9 +41,7 @@ export default class Registration extends React.Component {
       return
     }
 
-    databaseUtils.createUser(user, function (e) {
-      console.log("reg", e)
-    })
+    databaseUtils.createUser(user, function (e) {})
   }
 
   render() {

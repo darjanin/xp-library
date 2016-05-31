@@ -19,7 +19,7 @@ class App extends React.Component {
       activeBook: null,
       activeBookComments: {},
       books: {},
-      loggedIn: databaseUtils.isLoggedIn(),
+      loggedIn: databaseUtils.isLoggedIn()
     }
   }
 
@@ -109,7 +109,7 @@ class App extends React.Component {
           lend: true,
           id: authData.uid,
           name: authData.password.email,
-          date: Date.now(),
+          date: Date.now()
         }
       })
     }
@@ -140,7 +140,7 @@ class App extends React.Component {
   showBook(bookId) {
     this.setState({
       page: 'book',
-      activeBook: bookId,
+      activeBook: bookId
     })
   }
 
@@ -176,6 +176,7 @@ class App extends React.Component {
         loggedIn={this.state.loggedIn}
         hasLended={this.bookLendedToLoggedUser(this.state.books[this.state.activeBook])}
         addCommentFn={this.addComment.bind(this)}
+        changePageFn={this.changePage.bind(this)}
       />
     } else {
       page = <h1>404 Page not found</h1>

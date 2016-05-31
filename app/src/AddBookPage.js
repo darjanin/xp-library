@@ -21,13 +21,13 @@ export default class AddBookPage extends React.Component {
         lend: false,
         id: '',
         name: '',
-        date: '',
+        date: ''
       }
     }
 
     let errorsMessages = []
-    errorsMessages.concat(validateRequired(book))
-    errorsMessages.concat(validateYearFormat(book.year))
+    errorsMessages = errorsMessages.concat(validateRequired(book))
+    errorsMessages = errorsMessages.concat(validateYearFormat(book.year))
 
     if(errorsMessages.length === 0)
     {
@@ -42,6 +42,15 @@ export default class AddBookPage extends React.Component {
   }
 
   render() {
+    let error = ''
+    let length = this.state.errors.length
+    let errorMessages = this.state.errors.map(function(error, i) {
+      return length - 1 == i ? error: [error, <br/>]
+    })
+    if (errorMessages.length > 0){
+      error = <div className="message is-danger"> <div className="message-body"> {errorMessages} </div> </div>
+    }
+
     return (<div className="columns">
       <form className="column is-6 is-offset-3" onSubmit={this.onSubmit.bind(this)}>
         <div className="hero-content">
@@ -49,9 +58,7 @@ export default class AddBookPage extends React.Component {
             Add new book
           </h1>
         </div>
-        {this.state.errors.map((error) =>
-          <div className="t-error-message">{error}</div>
-        )}
+
         <div className="control">
         <input className="input" type="text" ref="title" placeholder="title"/>
         </div>
@@ -64,6 +71,7 @@ export default class AddBookPage extends React.Component {
         <div className="control">
         <textarea className="textarea" type="text" ref="description" placeholder="description"></textarea>
         </div>
+        {error}
         <button className="button is-primary" type="submit">Add</button>
       </form>
     </div>)

@@ -7,7 +7,7 @@ export default class BookDetail extends React.Component {
 
     this.state = {
       comments: null,
-      showCommentDialog: false,
+      showCommentDialog: false
     }
   }
 
@@ -21,7 +21,8 @@ export default class BookDetail extends React.Component {
   }
 
   render() {
-    const {book: {title, year, author, description, lend: {id, lend, name, date}}, lendFn, returnFn, bookId, hasLended, loggedIn, addCommentFn} = this.props
+    const {book: {title, year, author, description, lend: {id, lend, name, date}},
+             lendFn, returnFn, bookId, hasLended, loggedIn, addCommentFn, changePageFn} = this.props
     let comments = this.state.comments !== null ? this.state.comments : {}
 
     return (
@@ -50,7 +51,10 @@ export default class BookDetail extends React.Component {
           >
             {lend ? 'Return book' : 'Lend book'}
           </button>}
-          {!loggedIn && <p>Please sign up to borrow book.</p>}
+          {!loggedIn && <p>Please <a href="#" onClick={(e) => {
+              e.preventDefault();
+              changePageFn('login');
+            }}>log in</a> to borrow book.</p>}
 
           {this.state.showCommentDialog && <CommentForm addComment={(text) => addCommentFn(bookId, text)}/>}
         </div>
