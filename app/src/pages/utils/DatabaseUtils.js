@@ -1,8 +1,7 @@
 import FireBase from 'firebase'
+import {firebaseUrl} from '../../config'
 
-//const forge = "https://sweltering-heat-4077.firebaseio.com/" //Ondro
-const forge = "https://torrid-heat-4247.firebaseio.com" // Adam
-let ref = new FireBase(forge)
+let ref = new FireBase(firebaseUrl)
 let cachedUser = null
 
 let addNewUserToFireBase = function (newUser) {
@@ -23,11 +22,8 @@ let databaseUtils = {
       if (error) {
         let message = error.code
         callback(message)
-        console.log('error')
       } else {
-        console.log('login')
         this.loginWithPassword(user, function (auth) {
-          console.log('loged')
           addNewUserToFireBase({
             email: user.email,
             uid: auth.uid,

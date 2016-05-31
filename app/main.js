@@ -3,43 +3,82 @@ import ReactDOM from 'react-dom'
 import Index from './src/Index'
 import AddBookPage from './src/AddBookPage'
 import BookList from './src/BookList'
+import BookDetail from './src/BookDetail'
 import Login from './src/pages/Login'
 import Registration from './src/pages/Registration'
 import Navigation from './src/Navigation'
 import databaseUtils from './src/pages/utils/DatabaseUtils'
 import Firebase from 'firebase'
+import {firebaseUrl} from './src/config'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    let loggedIn = databaseUtils.isLoggedIn()
-    this.forge = "https://flickering-fire-362.firebaseio.com"
     this.state = {
       page: 'list',
+      activeBook: null,
+      activeBookComments: {},
       books: {},
-    loggedIn: false,
+      loggedIn: databaseUtils.isLoggedIn()
     }
   }
 
   componentDidMount() {
-    let booksRef = new Firebase(this.forge + '/books')
-    let newBooks
+    const ref = new Firebase(firebaseUrl)
+    let booksRef = ref.child('books')
     booksRef.on("value", (snapshot) => {
-      newBooks = snapshot.val()
-      console.log(newBooks);
+      const newBooks = snapshot.val()
       this.setState({books: newBooks})
     }, function (errorObject) {
       console.error("The read failed: " + errorObject.code)
     })
   }
 
-  addBook(book) {
-    let booksRef = new Firebase(this.forge + '/books')
-    booksRef.push().set(book)
+  cleanBooks() {
+    if (confirm('Are you sure?')) {
+      let booksRef = new Firebase(firebaseUrl + '/books')
+      booksRef.set(null)
+    }
+  }
 
-    this.setState({
-      page: 'list'
+  getLoggedUserId() {
+    if (this.state.loggedIn) {
+      const ref = new Firebase(firebaseUrl)
+      const authData = ref.getAuth()
+      return authData.uid
+    }
+    return null
+  }
+
+
+  addBook(book) {
+    const ref = new Firebase(firebaseUrl)
+    const authData = ref.getAuth()
+    let booksRef = ref.child('books')
+    booksRef.push().set(Object.assign({}, book, {
+      userId: authData.uid
+    }))
+
+    this.changePage('list')
+  }
+
+  addComment(bookId, text) {
+    const ref = new Firebase(firebaseUrl + `/comments`)
+    ref.push({
+      bookId: bookId,
+      authorId: this.getLoggedUserId(),
+      text: text,
+      date: Date.now()
     })
+  }
+
+  getComment() {
+    // const commentsRef = ref.child('comments')
+    // commentsRef.orderByChild('bookId').equalTo(this.state.activeBook).once('value', (data) => {
+    //   this.setState({
+    //     activeBookComments: data.val()
+    //   })
+    // })
   }
 
   handleLogout(loggedIn) {
@@ -59,6 +98,58 @@ class App extends React.Component {
     })
   }
 
+  lendBook(bookId) {
+    const ref = new Firebase(firebaseUrl)
+    const authData = ref.getAuth()
+    console.log(authData)
+    if (authData) {
+      const bookRef = ref.child('/books').child(bookId)
+      bookRef.update({
+        lend: {
+          lend: true,
+          id: authData.uid,
+          name: authData.password.email,
+          date: Date.now()
+        }
+      })
+    }
+  }
+
+  returnBook(bookId) {
+    const ref = new Firebase(firebaseUrl)
+
+    const bookRef = ref.child('books').child(bookId)
+    bookRef.update({
+      lend: {
+        lend: false,
+        id: '',
+        name: '',
+        date: ''
+      }
+    })
+  }
+
+  bookLendedToLoggedUser(book) {
+    const ref = new Firebase(firebaseUrl)
+    const authData = ref.getAuth()
+    const {lend: {lend, id}} = book
+
+    return lend && authData && authData.uid === id
+  }
+
+  showBook(bookId) {
+    this.setState({
+      page: 'book',
+      activeBook: bookId
+    })
+  }
+
+  deleteBook(bookId) {
+    const ref = new Firebase(firebaseUrl)
+    const bookRef = ref.child('books').child(bookId)
+    bookRef.remove()
+  }
+
   render() {
     let page
     if (this.state.page === 'index') {
@@ -66,18 +157,53 @@ class App extends React.Component {
     } else if (this.state.page === 'add') {
       page = <AddBookPage addFn={this.addBook.bind(this)} />
     } else if (this.state.page === 'list') {
-      page = <BookList books={this.state.books}/>
+      page = <BookList
+        books={this.state.books ? this.state.books : {}}
+        showBookFn={this.showBook.bind(this)}
+        deleteBookFn={this.deleteBook.bind(this)}
+        loggedUser={this.getLoggedUserId.bind(this)}
+      />
     } else if (this.state.page === 'login') {
       page = <Login/>
     } else if (this.state.page === 'registration') {
       page = <Registration/>
+    } else if (this.state.page === 'book' && this.state.activeBook !== null) {
+      page = <BookDetail
+        book={this.state.books[this.state.activeBook]}
+        bookId={this.state.activeBook}
+        lendFn={this.lendBook.bind(this)}
+        returnFn={this.returnBook.bind(this)}
+        loggedIn={this.state.loggedIn}
+        hasLended={this.bookLendedToLoggedUser(this.state.books[this.state.activeBook])}
+        addCommentFn={this.addComment.bind(this)}
+        changePageFn={this.changePage.bind(this)}
+      />
     } else {
       page = <h1>404 Page not found</h1>
     }
     return (
       <div className="">
-        <Navigation changePageFn={this.changePage.bind(this)} loggedIn={this.state.loggedIn} active={this.state.page}/>
-        { page }
+        <Navigation
+          changePageFn={this.changePage.bind(this)}
+          loggedIn={this.state.loggedIn}
+          active={this.state.page}
+        />
+        <div className="message">
+          <div className="message-body">
+            <div className="container">
+              <button
+                className="button is-danger"
+                onClick={this.cleanBooks.bind(this)}
+              >
+                Delete books from firebase
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="container" style={{marginTop: '20px'}}>
+          {page}
+        </div>
       </div>
     )
   }

@@ -1,44 +1,44 @@
 import React from 'react'
 
-export default class BookList extends React.Component {
+export default ({books, showBookFn, deleteBookFn, loggedUser}) => (
+  <div className="columns is-multiline t-books">
+    {Object.keys(books).map((key) =>
+      <Book
+        key={key}
+        data={books[key]}
+        showFn={() => showBookFn(key)}
+        loggedUserId={loggedUser()}
+        deleteFn={() => {if (confirm('Are you sure?')) deleteBookFn(key)}}
+      />
+    )}
+  </div>
+)
 
-  render() {
-    let booksElements = []
-    Object.keys(this.props.books).forEach(
-      (key) => booksElements.push(<Book key={key} data={this.props.books[key]}/>)
-    )
-    return (
-      <div className="container" style={{marginTop: '20px'}}>
-        <div className="columns is-multiline t-books">
-          {booksElements}
+const Book = ({key, data: {title, author, year, description, userId, lend: {lend}}, showFn, deleteFn, loggedUserId}) => (
+  <div key={key} className="column is-half">
+    <div className="card is-fullwidth" key={Math.random()}>
+      <div className="card-header">
+        <div
+          className="card-header-title"
+          style={lend ? {backgroundColor: '#fdeeed', color: '#ed6c63'} : {}}
+        >
+          {title}
         </div>
       </div>
-    )
-  }
-}
-
-const Book = (props) => {
-  const {key, data} = props
-
-  return (
-    <div key={key} className="column is-half">
-      <div className="card" style={{width: '100%'}} key={Math.random()}>
-        <div className="card-header">
-          <div className="card-header-title">{data.title}</div>
+      <div className="card-content">
+        <div className="title is-5">{author} - {year}</div>
+        <div className="content">
+          {description}
         </div>
-        <div className="card-content">
-          <div className="title is-5">{data.author} - {data.year}</div>
-          <div className="content">
-            {data.description}
-          </div>
-        </div>
-
-        <footer className="card-footer">
-          <a className="card-footer-item">Show</a>
-          <a className="card-footer-item">Edit</a>
-          <a className="card-footer-item">Delete</a>
-        </footer>
       </div>
+
+      <footer className="card-footer">
+        <a className="card-footer-item" onClick={showFn}>Show</a>
+        <a className="card-footer-item">Edit</a>
+        {userId === loggedUserId && !lend &&
+          <a className="card-footer-item" onClick={deleteFn}>Delete</a>
+        }
+      </footer>
     </div>
-  )
-}
+  </div>
+)
