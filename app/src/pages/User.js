@@ -7,34 +7,40 @@ export default class User extends React.Component {
     super(props)
     this.state = {
       errors: [],
+      userInfo: null,
+      userBooks: null,
+      userComments: null,
     }
   }
 
+  componentDidMount() {
+    databaseUtils.getUserInfo(this.props.userId, this.userInfoCallback.bind(this))
+  }
+
+  userInfoCallback(userInfo){
+    databaseUtils.getUserBooks(this.props.userId, this.userBooksCallback.bind(this), userInfo)
+  }
+
+  userBooksCallback(userBooks, userInfo){
+    databaseUtils.getUserComments(this.props.userId, this.userCommentsCallback.bind(this), userInfo, userBooks)
+  }
+
+  userCommentsCallback(userComments, userInfo, userBooks){
+    this.setState({
+      userInfo: userInfo,
+      userBooks: userBooks,
+      userComments: userComments
+    })
+  }
+
   render() {
-    const { showBookFn, deleteBookFn, loggedUser} = this.props
-    let userBooks = null
-    let userComments = null
-    let userInfo = databaseUtils.getUserInfo()
+    const { showBookFn, deleteBookFn, loggedUser, userId} = this.props
+    let userBooks = this.state.userBooks
+    let userComments = this.state.userComments
+    let userInfo = this.state.userInfo
 
-    if (userInfo) {
-      userBooks = databaseUtils.getUserBooks(userInfo.uid)
-      userComments = databaseUtils.getUserComments(userInfo.uid)
-    }
-
-    let keys = Object.keys(userBooks)
-    for (let i = 0; i < keys.length; i++)
-    {
-      if(userBooks[keys[i]].lend.lend)
-      {
-        let lend = userBooks[keys[i]].lend
-        lend.lendUserName = databaseUtils.getUserInfo(lend.id).username
-      }
-    }
-
-    keys = Object.keys(userComments)
-    for (let i = 0; i < keys.length; i++)
-    {
-      userComments[keys[i]].book = databaseUtils.getBookById(userComments[keys[i]].bookId)
+    if (!userInfo || !userComments || !userBooks) {
+      return (<div className="hero-content"></div>)
     }
 
     return (

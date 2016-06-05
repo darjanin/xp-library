@@ -6,7 +6,7 @@ export default class Registration extends React.Component {
     super(props)
     this.state = {
       localPage: 1,
-      usersPerPage: 2,
+      usersPerPage: 5,
     }
   }
 
@@ -33,10 +33,14 @@ export default class Registration extends React.Component {
     return index - 1 < 1 ? numberOfPages : index - 1
   }
 
+  showUser(id){
+    this.props.showUserFn(id)
+  }
+
   render() {
     const {users} = this.props
     const {localPage, usersPerPage} = this.state
-    const numberOfPages = users.length / usersPerPage
+    const numberOfPages = Math.ceil(users.length / usersPerPage)
     const nextPage = this.getNextPage(localPage, numberOfPages)
     const previousPage = this.getPreviousPage(localPage, numberOfPages)
 
@@ -86,7 +90,11 @@ export default class Registration extends React.Component {
           </thead>
           <tbody>
           {Object.keys(users).map((key) =>
-            this.checkLowerUserBound(key) && this.checkUpperUserBound(key) && <tr key={key}><td><a href="#">{users[key].username}</a></td></tr>
+            this.checkLowerUserBound(key) && this.checkUpperUserBound(key) &&
+            <tr key={key}><td><a onClick={(e) => {
+              e.preventDefault()
+              this.showUser(users[key].uid)}}
+              >{users[key].username}</a></td></tr>
           )}
           </tbody>
         </table>

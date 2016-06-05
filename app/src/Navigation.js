@@ -3,7 +3,7 @@ import databaseUtils from './pages/utils/DatabaseUtils'
 
 export default class Navigation extends React.Component {
   render() {
-    const {changePageFn, active, loggedIn} = this.props
+    const {changePageFn, active, loggedIn, showUser} = this.props
 
     const HeaderTab = ({children, page}) => (
       <a
@@ -46,7 +46,7 @@ export default class Navigation extends React.Component {
                     className="button is-success"
                     onClick={(e) => {
                       e.preventDefault()
-                      changePageFn('user')
+                      showUser()
                     }}
                   >
                     {userInfo ? userInfo.username : 'Error'}

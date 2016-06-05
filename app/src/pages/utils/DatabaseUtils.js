@@ -69,59 +69,90 @@ let databaseUtils = {
     this.onChange(false)
   },
 
-  getUserInfo: function () {
+  getUserInfo: function (uid, callback) {
+    if (!uid) return null
+
+    console.log("efg")
     let userInfo = null
-    let localRef = new Firebase(firebaseUrl + '/users')
-    let auth = ref.getAuth()
-    if (!auth){
-      return null;
-    }
-    localRef.orderByChild('uid').equalTo(auth.uid).on('value', function(snapshot) {
-      snapshot.forEach(function(data) {
-        userInfo = data.val()
+    let usersRef = ref.child('users')
+    usersRef.orderByChild('uid').equalTo(uid).on('value', function (snapshot) {
+      snapshot.forEach(function (data) {
+        callback(data.val())
       });
     });
-    
-    return userInfo;
   },
 
-  getUserBooks: function (uid) {
+  getUserBooks: function (uid, callback, userInfo) {
+    if (!uid || !callback || !userInfo) return null
     let userBooks = {}
-    let localRef = new FireBase(firebaseUrl + '/books')
-    localRef.orderByChild('userId').equalTo(uid).on('value', function(snapshot) {
+    let booksRef = ref.child('books')
+    let usersRef = ref.child('users')
+
+    booksRef.orderByChild('userId').equalTo(uid).on('value', function (snapshot) {
+      let counter = 0, size = 0
+      snapshot.forEach((data) => {if (data.val().lend.lend) size++})
+
       snapshot.forEach(function (data) {
-        userBooks[data.key()] = data.val()
+        let book = data.val()
+        if (book.lend.lend) {
+          let lend = book.lend
+          usersRef.orderByChild('uid').equalTo(uid).on('value', function (usersSnapshot) {
+            usersSnapshot.forEach(function (data) {
+              lend.lendUserName = data.val().username
+            });
+            counter++
+            if (counter == size) callback(userBooks, userInfo)
+          });
+        }
+        userBooks[data.key()] = book
       })
+
+      if (size == 0) callback(userBooks, userInfo)
     })
-    return userBooks
   },
 
-  getUserComments: function (uid) {
+  getUserComments: function (uid, callback, userInfo, userBooks) {
+    if (!uid) return null
     let userComments = {}
-    let localRef = new FireBase(firebaseUrl + '/comments')
-    localRef.orderByChild('authorId').equalTo(uid).on('value', function(snapshot) {
+    let commentsRef = ref.child('comments')
+    let booksRef = ref.child('books')
+
+    commentsRef.orderByChild('authorId').equalTo(uid).on('value', function (snapshot) {
+      let counter = 0
+      let size = 0
+      snapshot.forEach((data) => {size++})
       snapshot.forEach(function (data) {
-        userComments[data.key()] = data.val()
+        let comment = data.val()
+        booksRef.orderByChild('bookId').on('value', function (booksSnapShot) {
+          booksSnapShot.forEach(function (bookData) {
+            if (bookData.key() == comment.bookId) {
+              comment.book = bookData.val()
+              counter++
+              if (counter == size) callback(userComments, userInfo, userBooks)
+            }
+          })
+        })
+
+        userComments[data.key()] = comment
       })
+
+      if (size == 0) callback(userComments, userInfo, userBooks)
     })
-    return userComments
   },
 
   getBookById: function (id) {
+    if (id) return null
     let book = null
-    let localRef = new FireBase(firebaseUrl + '/books')
-    localRef.orderByChild('title').on('value', function(snapshot) {
+    let booksRef = ref.child('books')
+    booksRef.orderByChild('title').on('value', function (snapshot) {
       snapshot.forEach(function (data) {
-        if (data.key() == id)
-        {
+        if (data.key() == id) {
           book = data.val()
         }
       })
     })
     return book
   }
-
-
 }
 
 module.exports = databaseUtils

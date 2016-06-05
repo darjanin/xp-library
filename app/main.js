@@ -22,7 +22,8 @@ class App extends React.Component {
       activeBookComments: {},
       books: {},
       users: [],
-      loggedIn: databaseUtils.isLoggedIn()
+      loggedIn: databaseUtils.isLoggedIn(),
+      userToShow: null,
     }
   }
 
@@ -164,6 +165,18 @@ class App extends React.Component {
     bookRef.remove()
   }
 
+  showUser(userId){
+    if (!userId && !this.state.loggedIn) return
+    if (!userId) userId = databaseUtils.getUserInfo().uid
+
+    console.log(userId)
+    this.setState({
+      userToShow: userId
+    })
+
+    this.changePage('user')
+  }
+
   render() {
     let page
     if (this.state.page === 'index') {
@@ -179,6 +192,7 @@ class App extends React.Component {
       />
     } else if (this.state.page === 'userList') {
       page = <UserList
+        showUserFn={this.showUser.bind(this)}
         users={this.state.users ? this.state.users : {}}
         />
     } else if (this.state.page === 'login') {
@@ -198,6 +212,7 @@ class App extends React.Component {
       />
     } else if (this.state.page === 'user') {
       page = <User
+        userId={this.state.userToShow}
         showBookFn={this.showBook.bind(this)}
         deleteBookFn={this.deleteBook.bind(this)}
         loggedUser={this.getLoggedUserId.bind(this)}
@@ -211,6 +226,7 @@ class App extends React.Component {
           changePageFn={this.changePage.bind(this)}
           loggedIn={this.state.loggedIn}
           active={this.state.page}
+          showUser={this.showUser.bind(this)}
         />
         <div className="message">
           <div className="message-body">
