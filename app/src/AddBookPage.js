@@ -74,6 +74,7 @@ export function createBook(book) {
 }
 
 export function validate(book) {
+  console.log(book.year)
   return [
     ...validateRequired(book, ['title', 'author', 'year']),
     ...validateNumberLength(book.year, 4, 'year'),

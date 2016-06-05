@@ -33,6 +33,7 @@ export default class Navigation extends React.Component {
                 <img src="/logo.svg" alt="Logo" key="logo-image" style={{cursor: 'pointer'}}/>
               </div>
 
+              <HeaderTab key="userList" page="userList">List of users</HeaderTab>
               <HeaderTab key="list" page="list">List of books</HeaderTab>
 
               {this.props.loggedIn && <HeaderTab key="add" page="add">Add new book</HeaderTab>}
