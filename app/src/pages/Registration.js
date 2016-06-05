@@ -1,6 +1,6 @@
 import React from 'react'
 import databaseUtils from './utils/DatabaseUtils'
-import validatorUtils from './utils/ValidatorUtil'
+import {validateMaxLength, validateMinLength, validateAlphaNum, validateEmail, validateEqual} from '../ValidationUtils'
 
 export default class Registration extends React.Component {
 
@@ -14,54 +14,38 @@ export default class Registration extends React.Component {
   onSubmit(e) {
     e.preventDefault()
 
-    let user = {
-      username: this.refs.username.value,
-      email: this.refs.email.value,
-      password: this.refs.password.value,
-      passwordCheck: this.refs.passwordCheck.value
+    const {username, email, password, passwordCheck} = this.refs
+    const user = {
+      username: username.value,
+      email: email.value,
+      password: password.value,
+      passwordCheck: passwordCheck.value
     }
 
-    let messageUsername = validatorUtils.validateUsername(user.username)
-    let messageEmail = validatorUtils.validateEmail(user.email)
-    let messagePassword = validatorUtils.validatePassword(user.password, user.passwordCheck)
+    const errors = [
+      ...validateMaxLength(user.username, 15, 'user name'),
+      ...validateMinLength(user.username, 3, 'user name'),
+      ...validateAlphaNum(user.username, 'user name'),
+      ...validateEmail(user.email),
+      ...validateMinLength(user.password, 6, 'password'),
+      ...validateAlphaNum(user.password, 'password'),
+      ...validateEqual(user.password, 'password', user.passwordCheck, 'password again')
+    ]
 
-    let errorMessages = [];
-    if(messageUsername) {
-      errorMessages.push(messageUsername)
+    if(errors.length > 0) {
+      this.setState({errors: errors})
+    } else {
+      databaseUtils.createUser(user, function (e) {})
     }
-    if(messageEmail) {
-      errorMessages.push(messageEmail)
-    }
-    if(messagePassword) {
-      errorMessages.push(messagePassword)
-    }
-
-    if(errorMessages.length > 0) {
-      this.setState({errors: errorMessages})
-      return
-    }
-
-    databaseUtils.createUser(user, function (e) {})
   }
 
   render() {
-    let error = ''
-    let length = this.state.errors.length
-    let errorMessages = this.state.errors.map(function(error, i) {
-      return length - 1 == i ? error: [error, <br/>]
-    })
-    if (errorMessages.length > 0){
-      error = <div className="message is-danger"> <div className="message-body"> {errorMessages} </div> </div>
-    }
-
     return (
       <div className="columns">
         <form className="column is-6 is-offset-3" onSubmit={this.onSubmit.bind(this)}>
-          <div className="hero-content">
-            <h1 className="title">
-              Sign Up
-            </h1>
-          </div>
+          <h1 className="title">
+            Sign Up
+          </h1>
           <div className="control">
             <input className="input" type="text" ref="username" placeholder="Username" required/>
           </div>
@@ -74,7 +58,15 @@ export default class Registration extends React.Component {
           <div className="control">
             <input className="input" type="password" ref="passwordCheck" placeholder="Password again" required/>
           </div>
-          {error}
+
+          {this.state.errors.length > 0 &&
+            <div className="message is-danger">
+              <ul className="message-body">
+                  {this.state.errors.map((error, index) => <li key={index}>{error}</li>)}
+              </ul>
+            </div>
+          }
+
           <button className="button is-primary" type="submit">Sign Up</button>
         </form>
       </div>
