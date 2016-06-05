@@ -71,8 +71,11 @@ let databaseUtils = {
 
   getUserInfo: function () {
     let userInfo = null
-    var localRef = new Firebase(firebaseUrl + "/users");
+    let localRef = new Firebase(firebaseUrl + '/users')
     let auth = ref.getAuth()
+    if (!auth){
+      return null;
+    }
     localRef.orderByChild('uid').equalTo(auth.uid).on('value', function(snapshot) {
       snapshot.forEach(function(data) {
         userInfo = data.val()
@@ -80,7 +83,45 @@ let databaseUtils = {
     });
     
     return userInfo;
+  },
+
+  getUserBooks: function (uid) {
+    let userBooks = {}
+    let localRef = new FireBase(firebaseUrl + '/books')
+    localRef.orderByChild('userId').equalTo(uid).on('value', function(snapshot) {
+      snapshot.forEach(function (data) {
+        userBooks[data.key()] = data.val()
+      })
+    })
+    return userBooks
+  },
+
+  getUserComments: function (uid) {
+    let userComments = {}
+    let localRef = new FireBase(firebaseUrl + '/comments')
+    localRef.orderByChild('authorId').equalTo(uid).on('value', function(snapshot) {
+      snapshot.forEach(function (data) {
+        userComments[data.key()] = data.val()
+      })
+    })
+    return userComments
+  },
+
+  getBookById: function (id) {
+    let book = null
+    let localRef = new FireBase(firebaseUrl + '/books')
+    localRef.orderByChild('title').on('value', function(snapshot) {
+      snapshot.forEach(function (data) {
+        if (data.key() == id)
+        {
+          book = data.val()
+        }
+      })
+    })
+    return book
   }
+
+
 }
 
 module.exports = databaseUtils
