@@ -9,33 +9,18 @@ export default class AddBookPage extends React.Component {
     }
   }
 
-  getBookData({title, author, year, description}) {
-    return {
+  onSubmit(e) {
+    e.preventDefault()
+
+    const {title, author, year, description} = this.refs
+    const book = createBook({
       title: title.value,
       author: author.value,
       year: year.value,
       description: description.value,
-      lend: {
-        lend: false,
-        id: '',
-        name: '',
-        date: '',
-      },
-    }
-  }
+    })
 
-  validate(book) {
-    return [
-      ...validateRequired(book),
-      ...validateYearFormat(book.year),
-    ]
-  }
-
-  onSubmit(e) {
-    e.preventDefault()
-
-    const book = this.getBookData(this.refs)
-    const errors = this.validate(book)
+    const errors = validate(book)
 
     if (errors.length === 0) {
       this.props.addFn(book)
@@ -47,7 +32,7 @@ export default class AddBookPage extends React.Component {
   render() {
     return (
       <div className="columns">
-        <form className="column is-6 is-offset-3" onSubmit={this.onSubmit.bind(this)}>
+        <form className="column is-6 is-offset-3" id="form" onSubmit={this.onSubmit.bind(this)}>
           <h1 className="title">
             Add new book
           </h1>
@@ -75,4 +60,22 @@ export default class AddBookPage extends React.Component {
       </div>
     )
   }
+}
+
+export function createBook(book) {
+  return Object.assign({}, book, {
+    lend: {
+      lend: false,
+      id: '',
+      name: '',
+      date: '',
+    },
+  })
+}
+
+export function validate(book) {
+  return [
+    ...validateRequired(book),
+    ...validateYearFormat(book.year),
+  ]
 }

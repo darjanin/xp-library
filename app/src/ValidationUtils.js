@@ -2,7 +2,7 @@ const ERROR_MESSAGE_REQUIRED = ' is required, please fill it.'
 
 export function validateRequired(book){
   let errorMessages = []
-  
+
   if(book.title === ''){
     errorMessages.push('Title' + ERROR_MESSAGE_REQUIRED)
   }
@@ -34,6 +34,3 @@ export function userRequired(user){
   }
   return errorMessages
 }
-
-
-
