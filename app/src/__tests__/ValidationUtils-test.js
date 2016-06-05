@@ -5,6 +5,19 @@ import {validateRequired, validateNumberLength, userRequired} from '../Validatio
 
 
 describe('ValidationUtils', () => {
+  // export function validateNumberLength(text, length, title) {
+  //   return (new RegExp(`^\d{${length}}$`)).test(text) ? [] :
+  //     [`${capitalize(title)} must have ${length} digits.`]
+  // }
+  describe('valdiateNumberLength', () => {
+    it ('doesnt accept other characters than digit', () => {
+      expect(validateNumberLength('hello', 4, 'text').length).toEqual(1)
+    })
+
+    it ('has only 4 digits', () => {
+      expect(validateNumberLength('1234', 4, 'text').length).toEqual(0)
+    })
+  })
 
   describe('it validates user login', () => {
     let userDummy = {}

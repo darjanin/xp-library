@@ -8,10 +8,8 @@ export function validateRequired(data, fields){
     .map((field) => message(field))
 }
 
-export function validateNumberLength(text, length, title) {
-  return (new RegExp(`^\d{${length}}$`)).test(text) ? [] :
-    [`${capitalize(title)} must have ${length} digits.`]
-}
+export const validateNumberLength = (text, length, title) =>
+  (new RegExp(`^\\d{${length}}$`)).test(text) ? [] : [`${capitalize(title)} must have ${length} digits.`]
 
 export const validateMaxLength = (text, length, title) =>
   text.length <= length ? [] : [`${capitalize(title)} is long. Max length is ${length} characters.`]
