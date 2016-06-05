@@ -52,8 +52,8 @@ export default class BookDetail extends React.Component {
             {lend ? 'Return book' : 'Lend book'}
           </button>}
           {!loggedIn && <p>Please <a href="#" onClick={(e) => {
-              e.preventDefault();
-              changePageFn('login');
+              e.preventDefault()
+              changePageFn('login')
             }}>log in</a> to borrow book.</p>}
 
           {this.state.showCommentDialog && <CommentForm addComment={(text) => addCommentFn(bookId, text)}/>}

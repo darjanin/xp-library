@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Index from './src/Index'
 import AddBookPage from './src/AddBookPage'
+import UserList from './src/UserList'
 import BookList from './src/BookList'
 import BookDetail from './src/BookDetail'
 import Login from './src/pages/Login'
@@ -20,16 +21,28 @@ class App extends React.Component {
       activeBook: null,
       activeBookComments: {},
       books: {},
+      users: [],
       loggedIn: databaseUtils.isLoggedIn()
     }
   }
 
   componentDidMount() {
     const ref = new Firebase(firebaseUrl)
+
     let booksRef = ref.child('books')
     booksRef.on("value", (snapshot) => {
       const newBooks = snapshot.val()
       this.setState({books: newBooks})
+    }, function (errorObject) {
+      console.error("The read failed: " + errorObject.code)
+    })
+
+    let userRef = ref.child('users')
+    userRef.on("value", (snapshot) => {
+      const newUsers = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
+
+      // TODO database .orderByChild
+      this.setState({users: newUsers.sort((x,y) => x.username > y.username)})
     }, function (errorObject) {
       console.error("The read failed: " + errorObject.code)
     })
@@ -164,6 +177,10 @@ class App extends React.Component {
         deleteBookFn={this.deleteBook.bind(this)}
         loggedUser={this.getLoggedUserId.bind(this)}
       />
+    } else if (this.state.page === 'userList') {
+      page = <UserList
+        users={this.state.users ? this.state.users : {}}
+        />
     } else if (this.state.page === 'login') {
       page = <Login/>
     } else if (this.state.page === 'registration') {
