@@ -1,7 +1,7 @@
 jest.unmock('../ValidationUtils')
 
 import TestUtils from 'react-addons-test-utils'
-import {validateRequired, validateYearFormat, userRequired} from '../ValidationUtils'
+import {validateRequired, validateNumberLength, userRequired} from '../ValidationUtils'
 
 
 describe('ValidationUtils', () => {
@@ -39,27 +39,30 @@ describe('ValidationUtils', () => {
 
     it('title required', () => {
       bookDummy.title = ''
-      expect(validateRequired(bookDummy)[0]).toEqual("Title is required, please fill it.")
+      const validated = validateRequired(bookDummy, ['title', 'author', 'year'])
+      expect(validated[0]).toEqual("Title is required, please fill it.")
     })
 
     it('author required', () => {
       bookDummy.author = ''
-      expect(validateRequired(bookDummy)[0]).toEqual("Author is required, please fill it.")
+      const validated = validateRequired(bookDummy, ['title', 'author', 'year'])
+      expect(validated[0]).toEqual("Author is required, please fill it.")
     })
 
     it('year required', () => {
       bookDummy.year = ''
-      expect(validateRequired(bookDummy)[0]).toEqual("Year is required, please fill it.")
+      const validated = validateRequired(bookDummy, ['title', 'author', 'year'])
+      expect(validated[0]).toEqual("Year is required, please fill it.")
     })
 
     it('year is string with digits', () => {
       let year = 'asdfasdf'
-      expect(validateYearFormat(year)[0]).toEqual("Year must have four digits.")
+      expect(validateNumberLength(year, 4, 'year')[0]).toEqual("Year must have 4 digits.")
     })
 
-    it('year is string with length four', () => {
+    it('year is string with 4 four', () => {
       let year = '45678'
-      expect(validateYearFormat(year)[0]).toEqual("Year must have four digits.")
+      expect(validateNumberLength(year, 4, 'year')[0]).toEqual("Year must have 4 digits.")
     })
   })
 })

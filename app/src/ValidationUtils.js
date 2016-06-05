@@ -1,36 +1,16 @@
-const ERROR_MESSAGE_REQUIRED = ' is required, please fill it.'
+const capitalize = (text) => text.slice(0,1).toUpperCase() + text.slice(1)
 
-export function validateRequired(book){
-  let errorMessages = []
+export function validateRequired(data, fields){
+  const message = (field) => `${capitalize(field)} is required, please fill it.`
 
-  if(book.title === ''){
-    errorMessages.push('Title' + ERROR_MESSAGE_REQUIRED)
-  }
-  if(book.author === ''){
-    errorMessages.push('Author' + ERROR_MESSAGE_REQUIRED)
-  }
-  if(book.year === ''){
-    errorMessages.push('Year' + ERROR_MESSAGE_REQUIRED)
-  }
-
-  return errorMessages
+  return fields
+    .filter((field) => data[field] === '')
+    .map((field) => message(field))
 }
 
-export function validateYearFormat(year){
-  if(year.match(/^\d{4}$/) === null){
-    return ['Year must have four digits.']
-  }
-  return []
+export function validateNumberLength(text, length, title){
+  return (new RegExp(`^\d{${length}}$`)).test(text) ? [] :
+    [`${capitalize(title)} must have ${length} digits.`]
 }
 
-export function userRequired(user){
-  let errorMessages = []
-
-  if(user.email === ''){
-    errorMessages.push('Email' + ERROR_MESSAGE_REQUIRED)
-  }
-  if(user.password === ''){
-    errorMessages.push('Password' + ERROR_MESSAGE_REQUIRED)
-  }
-  return errorMessages
-}
+export const userRequired = (user) => validateRequired(user, ['email', 'password'])

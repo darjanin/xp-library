@@ -1,5 +1,5 @@
 import React from 'react'
-import {validateRequired, validateYearFormat} from './ValidationUtils'
+import {validateRequired, validateNumberLength} from './ValidationUtils'
 
 export default class AddBookPage extends React.Component {
   constructor(props){
@@ -75,7 +75,7 @@ export function createBook(book) {
 
 export function validate(book) {
   return [
-    ...validateRequired(book),
-    ...validateYearFormat(book.year),
+    ...validateRequired(book, ['title', 'author', 'year']),
+    ...validateNumberLength(book.year, 4, 'year'),
   ]
 }
