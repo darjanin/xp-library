@@ -6,6 +6,7 @@ import BookList from './src/BookList'
 import BookDetail from './src/BookDetail'
 import Login from './src/pages/Login'
 import Registration from './src/pages/Registration'
+import User from './src/pages/User'
 import Navigation from './src/Navigation'
 import databaseUtils from './src/pages/utils/DatabaseUtils'
 import Firebase from 'firebase'
@@ -177,6 +178,12 @@ class App extends React.Component {
         hasLended={this.bookLendedToLoggedUser(this.state.books[this.state.activeBook])}
         addCommentFn={this.addComment.bind(this)}
         changePageFn={this.changePage.bind(this)}
+      />
+    } else if (this.state.page === 'user') {
+      page = <User
+        showBookFn={this.showBook.bind(this)}
+        deleteBookFn={this.deleteBook.bind(this)}
+        loggedUser={this.getLoggedUserId.bind(this)}
       />
     } else {
       page = <h1>404 Page not found</h1>

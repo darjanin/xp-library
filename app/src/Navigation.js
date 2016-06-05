@@ -45,7 +45,7 @@ export default class Navigation extends React.Component {
                     className="button is-success"
                     onClick={(e) => {
                       e.preventDefault()
-                      //changePageFn('userInfo')
+                      changePageFn('user')
                     }}
                   >
                     {userInfo ? userInfo.username : 'Error'}
