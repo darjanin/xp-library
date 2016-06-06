@@ -72,7 +72,6 @@ let databaseUtils = {
   getUserInfo: function (uid, callback) {
     if (!uid) return null
 
-    console.log("efg")
     let userInfo = null
     let usersRef = ref.child('users')
     usersRef.orderByChild('uid').equalTo(uid).on('value', function (snapshot) {
@@ -138,20 +137,6 @@ let databaseUtils = {
 
       if (size == 0) callback(userComments, userInfo, userBooks)
     })
-  },
-
-  getBookById: function (id) {
-    if (id) return null
-    let book = null
-    let booksRef = ref.child('books')
-    booksRef.orderByChild('title').on('value', function (snapshot) {
-      snapshot.forEach(function (data) {
-        if (data.key() == id) {
-          book = data.val()
-        }
-      })
-    })
-    return book
   }
 }
 

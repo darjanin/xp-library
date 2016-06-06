@@ -24,6 +24,7 @@ class App extends React.Component {
       users: [],
       loggedIn: databaseUtils.isLoggedIn(),
       userToShow: null,
+      timeStamp: Date.now(),
     }
   }
 
@@ -33,7 +34,7 @@ class App extends React.Component {
     let booksRef = ref.child('books')
     booksRef.on("value", (snapshot) => {
       const newBooks = snapshot.val()
-      this.setState({books: newBooks})
+      this.setState({books: newBooks, timeStamp: Date.now()})
     }, function (errorObject) {
       console.error("The read failed: " + errorObject.code)
     })
@@ -41,9 +42,7 @@ class App extends React.Component {
     let userRef = ref.child('users')
     userRef.on("value", (snapshot) => {
       const newUsers = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
-
-      // TODO database .orderByChild
-      this.setState({users: newUsers.sort((x,y) => x.username > y.username)})
+      this.setState({users: newUsers.sort((x,y) => x.username.toLowerCase() > y.username.toLowerCase())})
     }, function (errorObject) {
       console.error("The read failed: " + errorObject.code)
     })
@@ -116,7 +115,6 @@ class App extends React.Component {
   lendBook(bookId) {
     const ref = new Firebase(firebaseUrl)
     const authData = ref.getAuth()
-    console.log(authData)
     if (authData) {
       const bookRef = ref.child('/books').child(bookId)
       bookRef.update({
@@ -166,15 +164,12 @@ class App extends React.Component {
   }
 
   showUser(userId){
-    if (!userId && !this.state.loggedIn) return
-    if (!userId) userId = databaseUtils.getUserInfo().uid
-
-    console.log(userId)
-    this.setState({
-      userToShow: userId
-    })
-
-    this.changePage('user')
+    if (userId || this.state.loggedIn){
+      this.setState({
+        userToShow: userId || this.getLoggedUserId()
+      })
+      this.changePage('user')
+    }
   }
 
   render() {
@@ -185,10 +180,12 @@ class App extends React.Component {
       page = <AddBookPage addFn={this.addBook.bind(this)} />
     } else if (this.state.page === 'list') {
       page = <BookList
+        key={"list"+this.state.timeStamp}
         books={this.state.books ? this.state.books : {}}
         showBookFn={this.showBook.bind(this)}
         deleteBookFn={this.deleteBook.bind(this)}
         loggedUser={this.getLoggedUserId.bind(this)}
+        showFilter={true}
       />
     } else if (this.state.page === 'userList') {
       page = <UserList
@@ -223,10 +220,12 @@ class App extends React.Component {
     return (
       <div className="">
         <Navigation
+          key={"nav"+this.state.timeStamp}
           changePageFn={this.changePage.bind(this)}
           loggedIn={this.state.loggedIn}
           active={this.state.page}
           showUser={this.showUser.bind(this)}
+          userId={this.getLoggedUserId()}
         />
         <div className="message">
           <div className="message-body">

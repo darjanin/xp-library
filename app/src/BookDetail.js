@@ -33,7 +33,7 @@ export default class BookDetail extends React.Component {
           <p>{description}</p>
           <hr/>
           <h3 className="subtitle">Comments</h3>
-          {Object.keys(comments).map(key => <Comment data={comments[key]}/>)}
+          {Object.keys(comments).map(key => <Comment key={key} data={comments[key]}/>)}
         </div>
         <div className="column is-half">
           <h2 className="subtitle">{lend ? `Book is lended to ${name}` : 'Book is waiting for you.'}</h2>

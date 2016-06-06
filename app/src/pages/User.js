@@ -13,6 +13,12 @@ export default class User extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState){
+    if (prevProps.userId !== this.props.userId){
+      databaseUtils.getUserInfo(this.props.userId, this.userInfoCallback.bind(this))
+    }
+  }
+
   componentDidMount() {
     databaseUtils.getUserInfo(this.props.userId, this.userInfoCallback.bind(this))
   }

@@ -2,8 +2,37 @@ import React from 'react'
 import databaseUtils from './pages/utils/DatabaseUtils'
 
 export default class Navigation extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      userInfo: null,
+    }
+  }
+
+  componentWillMount() {
+    let userId = this.props.userId
+    if (userId) {
+      this.setUserInfo(userId);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (prevProps.userId !== this.props.userId){
+      this.setUserInfo(this.props.userId);
+    }
+  }
+
+  setUserInfo(id){
+    databaseUtils.getUserInfo(id, (userInfo) => {
+      this.setState({
+        userInfo: userInfo
+      })
+    })
+  }
+
   render() {
     const {changePageFn, active, loggedIn, showUser} = this.props
+    const {userInfo} = this.state
 
     const HeaderTab = ({children, page}) => (
       <a
@@ -16,11 +45,6 @@ export default class Navigation extends React.Component {
         {children}
       </a>
     )
-
-    var userInfo = null;
-    if (loggedIn) {
-      userInfo = databaseUtils.getUserInfo()
-    }
 
     return (
         <header className="header">
@@ -49,7 +73,7 @@ export default class Navigation extends React.Component {
                       showUser()
                     }}
                   >
-                    {userInfo ? userInfo.username : 'Error'}
+                    {userInfo.username}
                   </button>
                 </div>
               }
