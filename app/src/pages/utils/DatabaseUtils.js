@@ -95,9 +95,11 @@ let databaseUtils = {
         let book = data.val()
         if (book.lend.lend) {
           let lend = book.lend
-          usersRef.orderByChild('uid').equalTo(uid).on('value', function (usersSnapshot) {
+          usersRef.orderByChild('uid').equalTo(book.lend.id).on('value', function (usersSnapshot) {
             usersSnapshot.forEach(function (data) {
-              lend.lendUserName = data.val().username
+              let lendUserInfo = data.val()
+              lend.lendUserName = lendUserInfo.username
+              lend.lendUserId = lendUserInfo.uid
             });
             counter++
             if (counter == size) callback(userBooks, userInfo)

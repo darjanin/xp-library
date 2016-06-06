@@ -213,6 +213,7 @@ class App extends React.Component {
         showBookFn={this.showBook.bind(this)}
         deleteBookFn={this.deleteBook.bind(this)}
         loggedUser={this.getLoggedUserId.bind(this)}
+        showUser={this.showUser.bind(this)}
       />
     } else {
       page = <h1>404 Page not found</h1>

@@ -40,7 +40,7 @@ export default class User extends React.Component {
   }
 
   render() {
-    const { showBookFn, deleteBookFn, loggedUser, userId} = this.props
+    const { showBookFn, deleteBookFn, loggedUser, userId, showUser} = this.props
     let userBooks = this.state.userBooks
     let userComments = this.state.userComments
     let userInfo = this.state.userInfo
@@ -77,6 +77,7 @@ export default class User extends React.Component {
                         showFn={() => showBookFn(key)}
                         loggedUserId={loggedUser()}
                         deleteFn={() => {if (confirm('Are you sure?')) deleteBookFn(key)}}
+                        showUser={showUser}
                       />
                     )
                   }
@@ -84,7 +85,7 @@ export default class User extends React.Component {
               :
                 <div className="columns box">
                   <div className="card-content">
-                    <div className="title is-5">{'You dont\'t have any book yet...'}</div>
+                    <div className="title is-5">{'You don\'t have any book yet...'}</div>
                   </div>
                 </div>
             }
@@ -103,7 +104,7 @@ export default class User extends React.Component {
             :
               <div className="columns box">
                 <div className="card-content">
-                  <div className="title is-5">{'You dont\'t have any comment of book yet...'}</div>
+                  <div className="title is-5">{'You don\'t have any comment of book yet...'}</div>
                 </div>
               </div>
         }
@@ -112,7 +113,7 @@ export default class User extends React.Component {
   }
 }
 
-const UserBook = ({key, data: {title, author, year, description, userId, lend: {lend, lendUserName}}, showFn, deleteFn, loggedUserId}) => (
+const UserBook = ({key, data: {title, author, year, description, userId, lend: {lend, lendUserName, lendUserId}}, showFn, deleteFn, loggedUserId, showUser}) => (
   <div key={key} className="column is-half">
     <div className="card is-fullwidth" key={Math.random()}>
       <div className="card-header">
@@ -120,7 +121,7 @@ const UserBook = ({key, data: {title, author, year, description, userId, lend: {
           className="card-header-title"
           style={lend ? {backgroundColor: '#fdeeed', color: '#ed6c63'} : {}}
         >
-          {title} {lend ? ': is lent to - ' + lendUserName : ''}
+          {title} {lend ?  <a onClick={() => {showUser(lendUserId)}} style={{color: '#ed6c63'}}> {': is lend to'} - {lendUserName} </a>    : ''}
         </div>
       </div>
       <div className="card-content">
