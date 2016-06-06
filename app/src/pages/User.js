@@ -66,27 +66,47 @@ export default class User extends React.Component {
         <h3 className="subtitle">
           Books
         </h3>
-          <div className="columns is-multiline t-books">
-            {Object.keys(userBooks).map((key) =>
-              <UserBook
-                key={key}
-                data={userBooks[key]}
-                showFn={() => showBookFn(key)}
-                loggedUserId={loggedUser()}
-                deleteFn={() => {if (confirm('Are you sure?')) deleteBookFn(key)}}
-              />
-            )}
-          </div>
+            {
+              Object.keys(userBooks) && Object.keys(userBooks).length != 0 ?
+                <div className="columns is-multiline t-books">
+                  {
+                    Object.keys(userBooks).map(key =>
+                      <UserBook
+                        key={key}
+                        data={userBooks[key]}
+                        showFn={() => showBookFn(key)}
+                        loggedUserId={loggedUser()}
+                        deleteFn={() => {if (confirm('Are you sure?')) deleteBookFn(key)}}
+                      />
+                    )
+                  }
+                </div>
+              :
+                <div className="columns box">
+                  <div className="card-content">
+                    <div className="title is-5">{'You dont\'t have any book yet...'}</div>
+                  </div>
+                </div>
+            }
         <h3 className="subtitle">
           Comments
         </h3>
-        {Object.keys(userComments).map(key =>
-          <UsrComment
-            key = {key}
-            data ={userComments[key]}
-            showFn = {() => showBookFn(userComments[key].bookId)}
-          />
-        )}
+        {
+          Object.keys(userComments) && Object.keys(userComments).length != 0 ?
+              Object.keys(userComments).map(key =>
+                <UsrComment
+                  key = {key}
+                  data ={userComments[key]}
+                  showFn = {() => showBookFn(userComments[key].bookId)}
+                />
+              )
+            :
+              <div className="columns box">
+                <div className="card-content">
+                  <div className="title is-5">{'You dont\'t have any comment of book yet...'}</div>
+                </div>
+              </div>
+        }
       </div>
     )
   }
