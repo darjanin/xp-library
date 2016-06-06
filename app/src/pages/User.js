@@ -39,6 +39,7 @@ export default class User extends React.Component {
     })
   }
 
+
   render() {
     const { showBookFn, deleteBookFn, loggedUser, userId, showUser} = this.props
     let userBooks = this.state.userBooks
@@ -121,7 +122,7 @@ const UserBook = ({key, data: {title, author, year, description, userId, lend: {
           className="card-header-title"
           style={lend ? {backgroundColor: '#fdeeed', color: '#ed6c63'} : {}}
         >
-          {title} {lend ?  <a onClick={() => {showUser(lendUserId)}} style={{color: '#ed6c63'}}> {': is lend to'} - {lendUserName} </a>    : ''}
+          {title} {lend && loggedUserId == userId ?  <a onClick={() => {showUser(lendUserId)}} style={{color: '#ed6c63'}}> {': is lend to'} - {lendUserName} </a>    : ''}
         </div>
       </div>
       <div className="card-content">
